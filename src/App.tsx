@@ -1,5 +1,5 @@
 import { Separator } from "@radix-ui/react-separator";
-import { AppSidebar } from "./components/app-sidebar";
+import { AppSidebar } from "./components/AppSidebar";
 import {
     SidebarInset,
     SidebarProvider,
@@ -13,20 +13,42 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "./components/ui/breadcrumb";
+import Router from "./Router";
+import { Switch } from "./components/ui/switch";
+import { ThemeProvider, useTheme } from "./hooks/useTheme";
 
 const App = () => {
+    return (
+        <ThemeProvider defaultTheme="light" storageKey="ui-theme">
+            <AppContent />
+        </ThemeProvider>
+    );
+};
+
+function ThemeToggle() {
+    const { theme, setTheme } = useTheme();
+    const isDark = theme === "dark";
+
+    const handleToggle = (checked: boolean) => {
+        setTheme(checked ? "dark" : "light");
+    };
+
+    return <Switch checked={isDark} onCheckedChange={handleToggle} />;
+}
+
+function AppContent() {
     return (
         <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-                <header className="flex h-16 shrink-0 items-center gap-2">
-                    <div className="flex items-center gap-2 px-4">
+                <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+                    <div className="flex items-center gap-2 px-4 justify-between w-full">
                         <SidebarTrigger className="-ml-1" />
                         <Separator
                             orientation="vertical"
                             className="mr-2 data-[orientation=vertical]:h-4"
                         />
-                        <Breadcrumb>
+                        {/* <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
                                     <BreadcrumbLink href="#">
@@ -40,20 +62,22 @@ const App = () => {
                                     </BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
-                        </Breadcrumb>
+                        </Breadcrumb> */}
+                        <ThemeToggle />
                     </div>
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                    <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+                    <Router />
+                    {/* <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                         <div className="bg-muted/50 aspect-video rounded-xl" />
                         <div className="bg-muted/50 aspect-video rounded-xl" />
                         <div className="bg-muted/50 aspect-video rounded-xl" />
                     </div>
-                    <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
+                    <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" /> */}
                 </div>
             </SidebarInset>
         </SidebarProvider>
     );
-};
+}
 
 export default App;
