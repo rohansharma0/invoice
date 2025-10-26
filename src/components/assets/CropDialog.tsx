@@ -42,14 +42,18 @@ const CropDialog = ({ open, onClose, onSave, image }: CropDialogProps) => {
                 </DialogHeader>
                 <div className="my-4 flex justify-center">
                     <Cropper
+                        // classes={{}}
                         image={image}
                         crop={crop}
                         zoom={zoom}
-                        aspect={4 / 3}
+                        aspect={1}
                         onCropChange={setCrop}
                         // onCropComplete={onCropComplete}
                         onZoomChange={setZoom}
                     />
+                </div>
+
+                <div className="my-4 flex justify-center">
                     {/* <img
                         src={image}
                         alt="Preview"

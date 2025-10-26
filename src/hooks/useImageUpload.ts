@@ -1,48 +1,60 @@
-// hooks/useImageUpload.ts
 import { useState } from "react";
 import imageCompression from "browser-image-compression";
 import { useLocalStorage } from "./useLocalStorage";
 
-export function useImageUpload(localStorageKey: string) {
-    const [image, setImage] = useLocalStorage<string | null>(
-        localStorageKey,
-        null
-    );
+type UseImageUploadOptions = {
+    key: string;
+    multiple?: boolean;
+};
+
+export function useImageUpload({
+    key,
+    multiple = false,
+}: UseImageUploadOptions) {
     const [originalFile, setOriginalFile] = useState<File | null>(null);
-    const [showCropModal, setShowCropModal] = useState<boolean>(false);
+
+    const {
+        data: storedImages,
+        setData,
+        addItem,
+        removeItem,
+        clear,
+    } = useLocalStorage<string | string[]>(key, multiple ? [] : "");
 
     const handleSelectFile = (file: File) => {
         console.log(file);
-
         setOriginalFile(file);
-        setShowCropModal(true);
+        saveImage(file);
     };
 
-    const saveCroppedImage = async (base64: string) => {
-        if (!base64) return;
-        const compressed = await imageCompression.getFilefromDataUrl(
-            base64,
-            "cropped.png"
-        );
-        const finalFile = await imageCompression(compressed, {
-            maxSizeMB: 0.4, // 400kb
+    const saveImage = async (file: File) => {
+        if (!file) return;
+
+        const compressedFile = await imageCompression(file, {
+            maxSizeMB: 0.4,
             useWebWorker: true,
         });
 
-        const finalBase64 = await imageCompression.getDataUrlFromFile(
-            finalFile
+        const base64 = await imageCompression.getDataUrlFromFile(
+            compressedFile
         );
-        setImage(finalBase64);
-        setShowCropModal(false);
+        console.log(base64);
+
+        if (multiple) {
+            addItem(base64);
+        } else {
+            setData(base64);
+        }
+
         setOriginalFile(null);
     };
 
     return {
-        image,
         originalFile,
+        storedImages,
         handleSelectFile,
-        showCropModal,
-        setShowCropModal,
-        saveCroppedImage,
+        saveImage,
+        removeItem,
+        clear,
     };
 }
