@@ -4,20 +4,16 @@ import { NAVIGATION } from "./config/navigation";
 const Router = () => {
     return (
         <Routes>
-            {NAVIGATION.main.map((item) => (
-                <Route
-                    key={item.path}
-                    path={item.path}
-                    element={<p>{item.title} Page</p>}
-                />
-            ))}
-            {NAVIGATION.secondary.map((item) => (
-                <Route
-                    key={item.path}
-                    path={item.path}
-                    element={<p>{item.title} Page</p>}
-                />
-            ))}
+            {Object.values(NAVIGATION)
+                .flat()
+                .map((item) => (
+                    <Route
+                        key={item.path}
+                        path={item.path}
+                        element={item.element}
+                    />
+                ))}
+            <Route path="*" element={<div>404 — Page Not Found</div>} />
         </Routes>
     );
 };

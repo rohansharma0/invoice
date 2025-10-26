@@ -1,3 +1,4 @@
+import ManageAssets from "@/components/assets/ManageAssets";
 import {
     SquareTerminal,
     Bot,
@@ -12,6 +13,7 @@ export interface NavItem {
     title: string;
     path: string;
     icon?: LucideIcon;
+    element?: React.ReactNode;
 }
 
 export const NAVIGATION = {
@@ -30,6 +32,7 @@ export const NAVIGATION = {
             title: "Manage Assets",
             path: "/assets",
             icon: BookOpen,
+            element: <ManageAssets />,
         },
     ] as NavItem[],
     secondary: [

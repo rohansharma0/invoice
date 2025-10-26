@@ -1,21 +1,19 @@
-import { Separator } from "@radix-ui/react-separator";
 import { AppSidebar } from "./components/AppSidebar";
 import {
     SidebarInset,
     SidebarProvider,
     SidebarTrigger,
 } from "./components/ui/sidebar";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "./components/ui/breadcrumb";
 import Router from "./Router";
 import { Switch } from "./components/ui/switch";
 import { ThemeProvider, useTheme } from "./hooks/useTheme";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "./components/ui/tooltip";
+import { Kbd, KbdGroup } from "./components/ui/kbd";
+import { Separator } from "./components/ui/separator";
 
 const App = () => {
     return (
@@ -43,7 +41,19 @@ function AppContent() {
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
                     <div className="flex items-center gap-2 px-4 justify-between w-full">
-                        <SidebarTrigger className="-ml-1" />
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <SidebarTrigger className="-ml-1" />
+                            </TooltipTrigger>
+                            <TooltipContent align="start" className="p-1">
+                                <KbdGroup>
+                                    <Kbd className="bg-foreground!">
+                                        Ctrl + B
+                                    </Kbd>
+                                </KbdGroup>
+                            </TooltipContent>
+                        </Tooltip>
+
                         <Separator
                             orientation="vertical"
                             className="mr-2 data-[orientation=vertical]:h-4"
