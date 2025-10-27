@@ -5,56 +5,51 @@ import { useLocalStorage } from "./useLocalStorage";
 type UseImageUploadOptions = {
     key: string;
     multiple?: boolean;
+    compressionOptions?: Partial<{
+        maxSizeMB: number;
+    }>;
 };
 
 export function useImageUpload({
     key,
     multiple = false,
+    compressionOptions,
 }: UseImageUploadOptions) {
+    const [uploading, setUploading] = useState(false);
     const [originalFile, setOriginalFile] = useState<File | null>(null);
 
-    const {
-        data: storedImages,
-        setData,
-        addItem,
-        removeItem,
-        clear,
-    } = useLocalStorage<string | string[]>(key, multiple ? [] : "");
+    const { addItem, setData } = useLocalStorage<string | string[]>(
+        key,
+        multiple ? [] : ""
+    );
 
-    const handleSelectFile = (file: File) => {
-        console.log(file);
-        setOriginalFile(file);
-        saveImage(file);
-    };
-
-    const saveImage = async (file: File) => {
+    const uploadImage = async (file: File) => {
         if (!file) return;
 
-        const compressedFile = await imageCompression(file, {
-            maxSizeMB: 0.4,
-            useWebWorker: true,
-        });
+        try {
+            setUploading(true);
+            setOriginalFile(file);
+            const maxSize = compressionOptions?.maxSizeMB ?? 0.4;
+            const compressedFile = await imageCompression(file, {
+                maxSizeMB: maxSize,
+                useWebWorker: true,
+            });
+            const base64 = await imageCompression.getDataUrlFromFile(
+                compressedFile
+            );
 
-        const base64 = await imageCompression.getDataUrlFromFile(
-            compressedFile
-        );
-        console.log(base64);
-
-        if (multiple) {
-            addItem(base64);
-        } else {
-            setData(base64);
+            if (multiple) addItem(base64);
+            else setData(base64);
+        } catch (err) {
+            console.error("Failed to upload image:", err);
+        } finally {
+            setOriginalFile(null);
+            setUploading(false);
         }
-
-        setOriginalFile(null);
     };
 
     return {
-        originalFile,
-        storedImages,
-        handleSelectFile,
-        saveImage,
-        removeItem,
-        clear,
+        uploading,
+        uploadImage,
     };
 }

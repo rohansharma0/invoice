@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function useLocalStorage<T>(key: string, defaultValue: T) {
     const [data, setDataState] = useState<T>(() => {
@@ -11,11 +11,36 @@ export function useLocalStorage<T>(key: string, defaultValue: T) {
         }
     });
 
+    // 🔹 Sync when any tab or hook updates localStorage
+    useEffect(() => {
+        const handleStorageChange = () => {
+            try {
+                const stored = localStorage.getItem(key);
+                setDataState(stored ? (JSON.parse(stored) as T) : defaultValue);
+            } catch (err) {
+                console.error("Failed to sync localStorage:", err);
+                setDataState(defaultValue);
+            }
+        };
+
+        window.addEventListener("storage", handleStorageChange);
+        window.addEventListener("localStorageUpdate", handleStorageChange);
+
+        return () => {
+            window.removeEventListener("storage", handleStorageChange);
+            window.removeEventListener(
+                "localStorageUpdate",
+                handleStorageChange
+            );
+        };
+    }, [key, defaultValue]);
+
     const setData = (value: T) => {
         try {
-            console.log(value);
             setDataState(value);
             localStorage.setItem(key, JSON.stringify(value));
+            // 🔹 Trigger custom sync event
+            window.dispatchEvent(new Event("localStorageUpdate"));
         } catch (err) {
             console.error("Failed to save to localStorage:", err);
         }
@@ -26,16 +51,18 @@ export function useLocalStorage<T>(key: string, defaultValue: T) {
             console.warn("addItem() called but stored data is not an array");
             return;
         }
-        console.log(item);
-        setData([...data, item] as T);
+        const updated = [...data, item] as T;
+        setData(updated);
     };
 
     const removeItem = (predicate: number | ((item: any) => boolean)) => {
         if (!Array.isArray(data)) return;
+
         const newData =
             typeof predicate === "number"
                 ? data.filter((_, idx) => idx !== predicate)
                 : data.filter((item) => !predicate(item));
+
         setData(newData as T);
     };
 
@@ -43,6 +70,7 @@ export function useLocalStorage<T>(key: string, defaultValue: T) {
         try {
             localStorage.removeItem(key);
             setDataState(defaultValue);
+            window.dispatchEvent(new Event("localStorageUpdate"));
         } catch (err) {
             console.error("Failed to clear localStorage:", err);
         }

@@ -7,7 +7,7 @@ import {
     DialogClose,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Cropper from "react-easy-crop";
 
 interface CropDialogProps {
@@ -15,20 +15,60 @@ interface CropDialogProps {
     onClose: () => void;
     onSave: (croppedBase64: string) => void;
     image: string | null;
+    aspect: number;
 }
 
-const CropDialog = ({ open, onClose, onSave, image }: CropDialogProps) => {
+const CropDialog = ({
+    open,
+    onClose,
+    onSave,
+    image,
+    aspect,
+}: CropDialogProps) => {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
 
-    // const onCropComplete = (croppedArea, croppedAreaPixels) => {
-    //     console.log(croppedArea, croppedAreaPixels);
-    // };
+    const onCropComplete = useCallback((_: any, areaPixels: any) => {
+        setCroppedAreaPixels(areaPixels);
+    }, []);
 
-    // You can integrate your cropping library here (e.g., react-easy-crop)
-    const handleSave = () => {
-        // For demonstration, we just use a placeholder base64
-        const croppedBase64 = "data:image/png;base64,...";
+    const getCroppedImg = async (imageSrc: string, cropArea: any) => {
+        const image = await createImage(imageSrc);
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        if (!ctx) throw new Error("No 2D context");
+
+        canvas.width = cropArea.width;
+        canvas.height = cropArea.height;
+
+        ctx.drawImage(
+            image,
+            cropArea.x,
+            cropArea.y,
+            cropArea.width,
+            cropArea.height,
+            0,
+            0,
+            cropArea.width,
+            cropArea.height
+        );
+
+        return canvas.toDataURL("image/jpeg");
+    };
+
+    const createImage = (url: string): Promise<HTMLImageElement> =>
+        new Promise((resolve, reject) => {
+            const image = new Image();
+            image.addEventListener("load", () => resolve(image));
+            image.addEventListener("error", (error) => reject(error));
+            image.src = url;
+        });
+
+    const handleSave = async () => {
+        if (!image || !croppedAreaPixels) return;
+        const croppedBase64 = await getCroppedImg(image, croppedAreaPixels);
         onSave(croppedBase64);
     };
 
@@ -36,35 +76,30 @@ const CropDialog = ({ open, onClose, onSave, image }: CropDialogProps) => {
 
     return (
         <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
+            <DialogContent className="max-w-[90vw] sm:max-w-lg p-0">
+                <DialogHeader className="p-3 border-b">
                     <DialogTitle>Crop Image</DialogTitle>
                 </DialogHeader>
-                <div className="my-4 flex justify-center">
+                <div className="relative w-full aspect-square bg-black/50">
                     <Cropper
-                        // classes={{}}
                         image={image}
                         crop={crop}
                         zoom={zoom}
-                        aspect={1}
+                        aspect={aspect}
                         onCropChange={setCrop}
-                        // onCropComplete={onCropComplete}
                         onZoomChange={setZoom}
+                        onCropComplete={onCropComplete}
                     />
                 </div>
-
-                <div className="my-4 flex justify-center">
-                    {/* <img
-                        src={image}
-                        alt="Preview"
-                        className="max-h-64 max-w-full object-contain"
-                    /> */}
-                </div>
-                <DialogFooter>
+                <DialogFooter className="p-3 border-t">
                     <DialogClose asChild>
-                        <Button variant="outline">Cancel</Button>
+                        <Button variant="outline" size="sm">
+                            Cancel
+                        </Button>
                     </DialogClose>
-                    <Button onClick={handleSave}>Save</Button>
+                    <Button onClick={handleSave} variant="default" size="sm">
+                        Cancel
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

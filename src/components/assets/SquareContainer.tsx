@@ -1,14 +1,16 @@
 import { cn } from "@/lib/utils";
 
+interface SquareContainerProps extends React.ComponentProps<"div"> {}
+
 const SquareContainer = ({
     className,
     children,
     ...props
-}: React.ComponentProps<"div">) => {
+}: SquareContainerProps) => {
     return (
         <div
             className={cn(
-                "aspect-square rounded-lg flex items-center justify-center",
+                "aspect-square rounded-xl flex items-center justify-center select-none transition-all",
                 className
             )}
             {...props}>

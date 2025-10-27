@@ -1,4 +1,5 @@
 import ManageAssets from "@/components/assets/ManageAssets";
+import Pricing from "@/components/Pricing";
 import {
     SquareTerminal,
     Bot,
@@ -50,6 +51,7 @@ export const NAVIGATION = {
             title: "Pricing",
             path: "/pricing",
             icon: BadgeIndianRupee,
+            element: <Pricing />,
         },
     ] as NavItem[],
 };
