@@ -1,6 +1,8 @@
 import ManageAssets from "@/components/assets/ManageAssets";
+import InvoiceActions from "@/components/invoice/InvoiceActions";
 import InvoiceBuilder from "@/components/invoice/InvoiceBuilder";
 import Pricing from "@/components/Pricing";
+import TemplateActions from "@/components/template/TemplateActions";
 import TemplateBuilder from "@/components/template/TemplateBuilder";
 import {
     SquareTerminal,
@@ -17,6 +19,7 @@ export interface NavItem {
     path: string;
     icon?: LucideIcon;
     element?: React.ReactNode;
+    actions?: React.ReactNode;
 }
 
 export const NAVIGATION = {
@@ -26,12 +29,14 @@ export const NAVIGATION = {
             path: "/",
             icon: SquareTerminal,
             element: <InvoiceBuilder />,
+            actions: <InvoiceActions />,
         },
         {
             title: "Templates",
             path: "/templates",
             icon: Bot,
             element: <TemplateBuilder />,
+            actions: <TemplateActions />,
         },
         {
             title: "Manage Assets",

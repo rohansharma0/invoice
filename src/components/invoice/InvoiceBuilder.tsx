@@ -15,11 +15,11 @@ export default function InvoiceBuilder() {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <InvoiceTopbar
+            {/* <InvoiceTopbar
                 viewMode={viewMode}
                 setViewMode={setViewMode}
                 previewRef={previewRef}
-            />
+            /> */}
 
             <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-muted/30 overflow-auto">
                 {(viewMode === "both" || viewMode === "form") && (
