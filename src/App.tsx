@@ -13,8 +13,7 @@ import {
     TooltipTrigger,
 } from "./components/ui/tooltip";
 import { Kbd, KbdGroup } from "./components/ui/kbd";
-import { Separator } from "./components/ui/separator";
-import { ScrollArea, ScrollBar } from "./components/ui/scroll-area";
+import { ScrollArea } from "./components/ui/scroll-area";
 
 const App = () => {
     return (
@@ -55,17 +54,17 @@ function AppContent() {
                             </TooltipContent>
                         </Tooltip>
 
-                        <Separator
+                        {/* <Separator
                             orientation="vertical"
                             className="mr-2 data-[orientation=vertical]:h-4"
-                        />
+                        /> */}
 
                         <ThemeToggle />
                     </header>
                     <div className="flex-1 overflow-hidden">
-                        <ScrollArea className="h-full w-full">
-                            <Router />
-                        </ScrollArea>
+                        {/* <ScrollArea className="h-full w-full"> */}
+                        <Router />
+                        {/* </ScrollArea> */}
                     </div>
                 </SidebarInset>
             </div>

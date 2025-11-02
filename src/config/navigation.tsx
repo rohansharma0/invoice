@@ -1,5 +1,7 @@
 import ManageAssets from "@/components/assets/ManageAssets";
+import InvoiceBuilder from "@/components/invoice/InvoiceBuilder";
 import Pricing from "@/components/Pricing";
+import TemplateBuilder from "@/components/template/TemplateBuilder";
 import {
     SquareTerminal,
     Bot,
@@ -23,11 +25,13 @@ export const NAVIGATION = {
             title: "Invoices",
             path: "/",
             icon: SquareTerminal,
+            element: <InvoiceBuilder />,
         },
         {
             title: "Templates",
             path: "/templates",
             icon: Bot,
+            element: <TemplateBuilder />,
         },
         {
             title: "Manage Assets",
