@@ -1,3 +1,4 @@
+import useInvoiceStore from "@/stores/useInvoiceStore";
 import { Button } from "../ui/button";
 import {
     Select,
@@ -8,10 +9,12 @@ import {
 } from "../ui/select";
 
 const InvoiceActions = () => {
+    const { viewMode, setViewMode } = useInvoiceStore();
+
     return (
         <div className="flex items-center gap-2">
             <Button variant="outline">Save</Button>
-            <Select value="both">
+            <Select value={viewMode} onValueChange={setViewMode}>
                 <SelectTrigger className="w-[140px]">
                     <SelectValue placeholder="View Mode" />
                 </SelectTrigger>

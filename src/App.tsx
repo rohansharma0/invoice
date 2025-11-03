@@ -1,6 +1,6 @@
 import { AppSidebar } from "./components/AppSidebar";
 import { SidebarInset, SidebarProvider } from "./components/ui/sidebar";
-import Router from "./Router";
+import Router from "./config/Router";
 import { ThemeProvider } from "./hooks/useTheme";
 import AppTopbar from "./components/AppTopBar";
 

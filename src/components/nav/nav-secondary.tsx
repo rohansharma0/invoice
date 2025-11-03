@@ -9,13 +9,13 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router";
-import type { NavItem } from "@/config/navigation";
+import type { AppRoute } from "@/config/Routes";
 
 export function NavSecondary({
     items,
     ...props
 }: {
-    items: NavItem[];
+    items: AppRoute[];
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
     const { pathname } = useLocation();
     return (
@@ -23,17 +23,17 @@ export function NavSecondary({
             <SidebarGroupContent>
                 <SidebarMenu>
                     {items.map((item) => (
-                        <SidebarMenuItem key={item.title}>
+                        <SidebarMenuItem key={item.sideBarTitle}>
                             <SidebarMenuButton
                                 asChild
                                 size="sm"
-                                tooltip={item.title}
+                                tooltip={item.sideBarTitle}
                                 isActive={pathname === item.path}>
                                 <Link to={item.path}>
-                                    {item.icon && (
-                                        <item.icon className="h-4 w-4" />
+                                    {item.sideBarIcon && (
+                                        <item.sideBarIcon className="h-4 w-4" />
                                     )}
-                                    <span>{item.title}</span>
+                                    <span>{item.sideBarTitle}</span>
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>

@@ -2,8 +2,8 @@ import { useLocation } from "react-router";
 import { SidebarTrigger } from "./ui/sidebar";
 import { Switch } from "./ui/switch";
 import { useTheme } from "@/hooks/useTheme";
-import { NAVIGATION } from "@/config/navigation";
 import { Separator } from "./ui/separator";
+import { ROUTES, type AppRoute } from "@/config/Routes";
 
 function ThemeToggle() {
     const { theme, setTheme } = useTheme();
@@ -20,13 +20,11 @@ function ThemeToggle() {
 function AppTopbar() {
     const { pathname } = useLocation();
 
-    const allRoutes = [...NAVIGATION.main, ...NAVIGATION.secondary];
-
-    const currentRoute = allRoutes.find((route) =>
+    const currentRoute = ROUTES.find((route: AppRoute) =>
         route.path === "/" ? pathname === "/" : pathname.startsWith(route.path)
     );
 
-    const title = currentRoute?.title;
+    const title = currentRoute?.topBarTitle;
     const actions = currentRoute?.actions;
 
     return (

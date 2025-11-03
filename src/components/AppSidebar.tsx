@@ -26,7 +26,7 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Link } from "react-router";
-import { NAVIGATION } from "@/config/navigation";
+import { ROUTES } from "@/config/Routes";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const user = {
@@ -56,9 +56,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                <NavMain items={NAVIGATION.main} />
+                <NavMain
+                    items={ROUTES.filter((route) => route.type === "main")}
+                />
                 <NavSecondary
-                    items={NAVIGATION.secondary}
+                    items={ROUTES.filter((route) => route.type === "secondary")}
                     className="mt-auto"
                 />
             </SidebarContent>

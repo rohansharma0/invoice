@@ -17,26 +17,29 @@ import {
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router";
-import type { NavItem } from "@/config/navigation";
+import type { AppRoute } from "@/config/Routes";
 
-export function NavMain({ items }: { items: NavItem[] }) {
+export function NavMain({ items }: { items: AppRoute[] }) {
     const { pathname } = useLocation();
     return (
         <SidebarGroup>
             <SidebarGroupLabel>Navigation</SidebarGroupLabel>
             <SidebarMenu>
-                {items.map((item: NavItem) => (
-                    <Collapsible key={item.title} asChild defaultOpen={false}>
+                {items.map((item: AppRoute) => (
+                    <Collapsible
+                        key={item.sideBarTitle}
+                        asChild
+                        defaultOpen={false}>
                         <SidebarMenuItem>
                             <SidebarMenuButton
                                 asChild
-                                tooltip={item.title}
+                                tooltip={item.sideBarTitle}
                                 isActive={pathname === item.path}>
                                 <Link to={item.path}>
-                                    {item.icon && (
-                                        <item.icon className="h-4 w-4" />
+                                    {item.sideBarIcon && (
+                                        <item.sideBarIcon className="h-4 w-4" />
                                     )}
-                                    <span>{item.title}</span>
+                                    <span>{item.sideBarTitle}</span>
                                 </Link>
                             </SidebarMenuButton>
                             {/* {item.items?.length ? (
